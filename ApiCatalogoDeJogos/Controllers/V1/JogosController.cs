@@ -34,15 +34,23 @@ namespace ApiCatalogoDeJogos.Controllers.V1
 
             if(jogos.Count() == 0)
             {
-
+                return NoContent();
             }
             return Ok(jogos);
         }
 
         [HttpGet("{idjogo:guid}")]
-        public async Task<ActionResult<JogoViewModel>> Obter(Guid idJogo )
+        // busca pela rota do id
+        /// <response code="200">Retorna o jogo filtrado</response>
+        /// <response code="204">Caso não haja jogo com este id</response>  
+        public async Task<ActionResult<JogoViewModel>> Obter([FromRoute] Guid idJogo)
         {
-            var result = await _jogoService.Obter(1);
+            var jogo = await _jogoService.Obter(idJogo);
+
+            if (jogo == null)
+            {
+                return NoContent();
+            }
             return Ok();
         }
 
