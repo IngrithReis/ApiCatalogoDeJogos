@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace ApiCatalogoDeJogos.Controllers.V1
 {
-   
+
     [Route("api/V1/[controller]")]
     [ApiController]
-    public class JogosController : ControllerBase 
+    public class JogosController : ControllerBase
     {
         private readonly IJogoService _jogoService;
 
@@ -28,11 +28,11 @@ namespace ApiCatalogoDeJogos.Controllers.V1
         //numeração da página virá por query, 50 registros ao máximo por página.
         // notation página =1 , significa que por defalt, número da página inicia com 1
         //página = por default retorna 5
-        public async Task<ActionResult<IEnumerable<JogoViewModel>>> Obter([FromQuery,Range(1,int.MaxValue)] int pagina = 1,[FromQuery,Range(1,50)] int quantidade =5)
+        public async Task<ActionResult<IEnumerable<JogoViewModel>>> Obter([FromQuery, Range(1, int.MaxValue)] int pagina = 1, [FromQuery, Range(1, 50)] int quantidade = 5)
         {
-            var jogos= await _jogoService.Obter(pagina, quantidade);
+            var jogos = await _jogoService.Obter(pagina, quantidade);
 
-            if(jogos.Count() == 0)
+            if (jogos.Count() == 0)
             {
                 return NoContent();
             }
@@ -51,31 +51,72 @@ namespace ApiCatalogoDeJogos.Controllers.V1
             {
                 return NoContent();
             }
-            return Ok();
+            return Ok(jogo);
         }
 
         [HttpPost]
-        public async Task<ActionResult<JogoViewModel>> InserirJogo(JogoInputModel jogo)
+        /// <response code="200">Cao o jogo seja inserido com sucesso</response>
+        /// <response code="422">Caso já exista um jogo com mesmo nome para a mesma produtora</response>  
+        public async Task<ActionResult<JogoViewModel>> InserirJogo([FromBody] JogoInputModel jogoInputModel)
         {
-            return Ok();
+            try
+            {
+                var jogo = await _jogoService.InserirJogo(jogoInputModel);
+
+                return Ok(jogo);
+            }
+            catch (Exception e)
+            {
+                return UnprocessableEntity("Já há jogo cadastrado com este nome");
+            }
         }
 
         [HttpPut("{idjogo:guid}")]// atualização de todo o objeto
-        public async Task<ActionResult> Atualizar(Guid idjogo, JogoInputModel jogo)
+
+        public async Task<ActionResult> Atualizar([FromRoute] Guid idjogo, [FromBody] JogoInputModel jogoInputModel)
         {
-            return Ok();
+            try
+            {
+                await _jogoService.Atualizar(idjogo, jogoInputModel);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return UnprocessableEntity("Jogo não localizado");
+            }
+
         }
 
-        [HttpPatch("{idjogo:guid/preco/{preco:double}")]// atualiza apenas um campo 
-        public async Task<ActionResult> Atualizar(Guid idjogo, double preco)
+        [HttpPatch("{idjogo:guid/preco/{preco:double}")]
+
+        // Patch atualiza apenas um campo, no caso, o preço
+        /// <response code="200">Cao o preço seja atualizado com sucesso</response>
+        /// <response code="404">Caso não exista um jogo com este Id</response>
+        public async Task<ActionResult> Atualizar([FromRoute] Guid idjogo, [FromRoute] double preco)
         {
-            return Ok();
+            try
+            {
+                await _jogoService.Atualizar(idjogo, preco);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return UnprocessableEntity("Jogo não localizado");
+            }
         }
 
         [HttpDelete("{idjogo:guid}")]
-        public async Task<ActionResult> ApagarJogo(Guid idjogo)
+        public async Task<ActionResult> ApagarJogo([FromRoute] Guid idjogo)
         {
-            return Ok();
+            try
+            {
+                await _jogoService.ApagarJogo(idjogo);
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return UnprocessableEntity("Jogo não localizado");
+            }
         }
 
 
