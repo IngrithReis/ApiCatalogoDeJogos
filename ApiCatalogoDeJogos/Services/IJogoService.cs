@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ApiCatalogoDeJogos.Services
 {
-    public interface IJogoService
+    public interface IJogoService : IDisposable
     {
-        Task<IEnumerable<JogoViewModel>> Obter(int pagina, int quantidade);
+        Task<List<JogoViewModel>> Obter(int pagina, int quantidade);
         Task<JogoViewModel> Obter(Guid idJogo);
         Task<JogoViewModel> InserirJogo(JogoInputModel jogo);
         Task Atualizar(Guid idjogo, JogoInputModel jogo);
