@@ -2,7 +2,7 @@
 
 namespace ApiCatalogoDeJogos.InputModels
 {
-    public class JoogoInputModel
+    public class JogoInputModel
     {
         [Required(ErrorMessage ="Campo obrigatório!")]
         [StringLength(100, MinimumLength =3, ErrorMessage ="O {0} deve conter de {2} a {1} caracteres!")]
