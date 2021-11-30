@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-
+using ApiCatalogoDeJogos.Exceptions;
 
 namespace ApiCatalogoDeJogos.Controllers.V1
 {
@@ -65,9 +65,9 @@ namespace ApiCatalogoDeJogos.Controllers.V1
 
                 return Ok(jogo);
             }
-            catch (Exception e)
+            catch (JogoJaCadastradoException e)
             {
-                return UnprocessableEntity("Já há jogo cadastrado com este nome");
+                return UnprocessableEntity(e.Message);
             }
         }
 
@@ -80,9 +80,9 @@ namespace ApiCatalogoDeJogos.Controllers.V1
                 await _jogoService.Atualizar(idjogo, jogoInputModel);
                 return Ok();
             }
-            catch (Exception e)
+            catch (JogoNaoCadastradoException e)
             {
-                return UnprocessableEntity("Jogo não localizado");
+                return NotFound(e.Message);
             }
 
         }
@@ -99,9 +99,9 @@ namespace ApiCatalogoDeJogos.Controllers.V1
                 await _jogoService.Atualizar(idjogo, preco);
                 return Ok();
             }
-            catch (Exception e)
+            catch (JogoNaoCadastradoException e)
             {
-                return UnprocessableEntity("Jogo não localizado");
+                return UnprocessableEntity(e.Message);
             }
         }
 
@@ -113,9 +113,9 @@ namespace ApiCatalogoDeJogos.Controllers.V1
                 await _jogoService.ApagarJogo(idjogo);
                 return Ok();
             }
-            catch(Exception e)
+            catch(JogoNaoCadastradoException e)
             {
-                return UnprocessableEntity("Jogo não localizado");
+                return UnprocessableEntity(e.Message) ;
             }
         }
 
