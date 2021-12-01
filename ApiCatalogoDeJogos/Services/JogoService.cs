@@ -16,7 +16,7 @@ namespace ApiCatalogoDeJogos.Services
 
         public JogoService(IJogoRepository jogoRepository)
         {
-            jogoRepository = _jogoRepository;
+            _jogoRepository = jogoRepository;
         }
         public async Task ApagarJogo(Guid idjogo)
         {
@@ -25,7 +25,7 @@ namespace ApiCatalogoDeJogos.Services
             {
                 throw new JogoNaoCadastradoException();
             }
-            await _jogoRepository.Remover(idjogo);
+            await _jogoRepository.Apagar(idjogo);
         }
 
         public async Task Atualizar(Guid idjogo, JogoInputModel jogoInputViewModel)
@@ -112,9 +112,6 @@ namespace ApiCatalogoDeJogos.Services
             };
             
         }
-        public void Dispose()
-        {
-            _jogoRepository?.Dispose();
-        }
+        
     }
 }

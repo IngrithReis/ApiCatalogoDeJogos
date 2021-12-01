@@ -13,7 +13,7 @@ using ApiCatalogoDeJogos.Exceptions;
 namespace ApiCatalogoDeJogos.Controllers.V1
 {
 
-    [Route("api/V1/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class JogosController : ControllerBase
     {
@@ -87,7 +87,7 @@ namespace ApiCatalogoDeJogos.Controllers.V1
 
         }
 
-        [HttpPatch("{idjogo:guid/preco/{preco:double}")]
+        [HttpPatch("{idjogo:guid}/preco/{preco:double}")]
 
         // Patch atualiza apenas um campo, no caso, o preço
         /// <response code="200">Cao o preço seja atualizado com sucesso</response>
